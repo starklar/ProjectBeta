@@ -36,10 +36,6 @@ function ConfirmRegistration() {
         navigate('/');
     }
 
-    function checkAuthentication(e){
-        return localStorage.getItem("AccessToken") != null;
-  }
-
     return (
         <div className="ConfirmRegistration">
           <header className="ConfirmRegistration-header">
@@ -63,9 +59,6 @@ function ConfirmRegistration() {
                 <button type = "submit" onClick={redirectToLogin}>Already Have a verified Account? Login here</button>
             </div>
             </header>
-            { checkAuthentication() ?
-                <Navigate to="/Products" /> : <></>
-            }
         </div>
     );
 }

@@ -3,6 +3,7 @@ import './Login.css';
 import { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { signIn, getSession } from "./AwsAuth"
+import axios from "axios";
 
 function Login() {
     const navigate = useNavigate();
@@ -20,27 +21,39 @@ function Login() {
         setUser({ ...user, password: e.target.value });
     }
 
-    function checkAuthentication(e){
-        return localStorage.getItem("AccessToken") != null;
-    }
-
     const FormValidation = async() => {
         try {
             await signIn(user.username, user.password)
             try{
                 let session = await getSession();
-                localStorage.setItem('AccessToken', JSON.stringify(session.accessToken));
-                localStorage.setItem('Username', user.username);
-                localStorage.setItem('Cart', "[]");
-                localStorage.setItem('CartIdCounter', 0);
-                navigate('/Products', {replace:true});
+                try{
+                    const params = {username: user.username, cart: []};
+                    await axios.post(
+                        'https://ybdifhdaol.execute-api.us-east-2.amazonaws.com/users',
+                        params,
+                        {
+                            headers: {
+                                'authorization': session.accessToken.jwtToken,
+                                'Accept' : 'application/json',
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    )
+                    .then(() => {
+                        localStorage.setItem('Username', user.username);
+                        navigate('/Products', {replace:true});
+                    });
+                }
+                catch(error){
+                    alert("Axios error: " + error);
+                }
             }
             catch(sessionError){
-                alert(sessionError);
+                alert("Session error: " + sessionError);
             }
         }
         catch (signInError) {
-            alert(signInError);
+            alert("Sign in error: " + signInError);
         }
     }
 
@@ -86,10 +99,6 @@ function Login() {
                 <button type = "submit" onClick={redirectToRegister}>New? Make an account here.</button>
             </div>
             </header>
-
-            { checkAuthentication() ?
-                <Navigate to="/Products" /> : <></>
-            }
         </div>
     );
 }

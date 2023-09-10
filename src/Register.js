@@ -48,10 +48,6 @@ function Register() {
         navigate('/', {replace:true});
     }
 
-    function checkAuthentication(e){
-    return localStorage.getItem("AccessToken") != null;
-}
-
     return (
         <div className="Register">
         <header className="Register-header">
@@ -89,9 +85,6 @@ function Register() {
                 <button type = "submit" onClick={redirectToLogin}>Already Have an Account? Login here</button>
             </div>
         </header>
-            { checkAuthentication() ?
-                    <Navigate to="/Products" /> : <></>
-            }
         </div>
     );
 }

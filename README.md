@@ -1,5 +1,5 @@
 # ProjectBeta
- Mock shopping website with a React JavaScript front end and an AWS backend.
+ Mock shopping website with a React JavaScript front end and to connect to an AWS backend.
 
  Backend uses:
  - AWS Cognito for user registration, sign-in, and authentication with JWT tokens
